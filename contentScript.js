@@ -12,24 +12,40 @@ const createButton = () => {
   btn.style.borderRadius = ".1rem";
   btn.style.color = "white";
   btn.style.border = ".1rem solid #337ab7";
-  // btn.style.fontSize = "1rem";
+  btn.style.fontSize = "initial";
+  btn.style.display = "block";
 
   return btn;
 };
 
-const amazon_addbtn = (fetchBookName) => {
-  if (
-    document
-      .querySelector("#nav-global-location-data-modal-action")
-      .attributes[2].value.search("books") !== -1
-  ) {
-    const ul = document.querySelector(
-      "ul.a-unordered-list.a-nostyle.a-button-list.a-horizontal"
-    );
+const get_parent = () => {
+  const possible_parents = [
+    // document.querySelector(
+    //   "ul.a-unordered-list.a-nostyle.a-button-list.a-horizontal"
+    // ),
+    document.querySelector("#title"),
+  ];
 
-    const btn = createButton();
-    btn.addEventListener("click", () => openNewTab(fetchBookName));
-    ul.prepend(btn);
+  return possible_parents.find((el) => !!el);
+};
+
+const is_amazon_book_page = () =>
+  document
+    .querySelector("#nav-global-location-data-modal-action")
+    .attributes[2].value.search("books") !== -1 ||
+  document
+    .querySelector("#nav-global-location-data-modal-action")
+    .attributes[2].value.search("audible") !== -1 ||
+  document.querySelector("#add-to-ebooks-cart-button");
+
+const amazon_addbtn = (fetchBookName) => {
+  if (is_amazon_book_page()) {
+    let parent = get_parent();
+    if (parent) {
+      const btn = createButton();
+      btn.addEventListener("click", () => openNewTab(fetchBookName));
+      parent.appendChild(btn);
+    }
   }
 };
 
